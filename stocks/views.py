@@ -13,6 +13,10 @@ import os
 
 logger = logging.getLogger(__name__)
 
+def home_view(request):
+    return HttpResponse("Welcome to the Blockhouse Stock Fetcher App!")
+
+
 def fetch_data_view(request):
     """
     Fetch stock data for a given symbol and store it in the database.
