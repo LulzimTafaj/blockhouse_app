@@ -14,7 +14,7 @@ The **Blockhouse Stock Fetcher App** is a robust Django-based backend applicatio
 
 - **Predictive Analytics**: The integration of a pre-trained machine learning model allows users to predict future stock prices based on historical trends. This feature simplifies the complexity of machine learning, focusing on delivering actionable insights rather than requiring in-depth understanding or training of models.
 
-- **Reporting Capabilities**: The app generates detailed reports that include performance summaries, visual comparisons of predicted vs. actual prices, and key financial metrics. Reports can be generated in various formats, making it easy for users to share and analyze results.
+- **Reporting Capabilities**: The application generates detailed reports that include performance summaries, visual comparisons of predicted vs. actual prices, and key financial metrics. Reports can be generated in various formats, including PDF, which is automatically downloaded locally for easy sharing and further analysis.
 
 ### Technical Implementation
 
@@ -78,7 +78,7 @@ DB_USER=your_rds_username
 DB_PASSWORD=your_rds_password
 DB_HOST=your_rds_endpoint
 DB_PORT=5432
-DEBUG=True
+DEBUG=False
 EC2_HOST=your_ec2_instance_public_ip
 EC2_KEY=your_base64_encoded_ec2_key
 ```
@@ -104,7 +104,7 @@ EC2_KEY=your_base64_encoded_ec2_key
 - **Fetch Stock Data**: `GET /stocks/fetch/?symbol=<stock_symbol>` - Fetch stock data for a specific symbol.
 - **Backtest**: `GET /stocks/backtest/?symbol=<stock_symbol>&initial_investment=<amount>&short_window=<days>&long_window=<days>` - Perform backtesting on the given stock.
 - **Predict**: `GET /stocks/predict/?symbol=<stock_symbol>&days=<number_of_days>` - Predict future stock prices.
-- **Report**: `GET /stocks/report/?symbol=<stock_symbol>` - Generate a report including backtest results and predictions.
+- **Report**: `GET /stocks/report/?symbol=<stock_symbol>&format=<format>` - Generate a report containing backtest results and predictions in the specified format (JSON or PDF). When requested in PDF format, the file will be automatically downloaded locally.
 
 ## Running Tests
 To run the tests, execute the following command:
