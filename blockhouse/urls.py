@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('stocks/', include('stocks.urls'))
+    path('', RedirectView.as_view(url='/stocks/', permanent=False)),  # Redirect root URL to /stocks/
+    path('stocks/', include('stocks.urls')),  # Ensure your stocks URLs are included
 ]
