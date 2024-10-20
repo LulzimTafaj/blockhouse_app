@@ -1,17 +1,6 @@
 version: '3'
 
 services:
-  db:
-    image: postgres
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5433:5432"
-
   web:
     build: .
     command: sh -c "python manage.py makemigrations && python manage.py migrate && gunicorn blockhouse.wsgi:application --bind 0.0.0.0:8000"
@@ -19,14 +8,9 @@ services:
       - .:/app
     ports:
       - "8081:8000"
-    depends_on:
-      - db
     environment:
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-
-volumes:
-  postgres_data:
+      DB_NAME: ${DB_NAME}          # Loaded from .env
+      DB_USER: ${DB_USER}          # Loaded from .env
+      DB_PASSWORD: ${DB_PASSWORD}  # Loaded from .env
+      DB_HOST: ${DB_HOST}          # Loaded from .env
+      DB_PORT: ${DB_PORT}          # Loaded from .env
