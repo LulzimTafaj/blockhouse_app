@@ -28,7 +28,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose
 
-      # Step 4: Install requirements
+      # Step 4: Install Python dependencies
       - name: Install requirements
         run: |
           sudo apt-get update
@@ -40,7 +40,7 @@ jobs:
         run: |
           docker-compose build
 
-      # Step 6: Run tests
+      # Step 6: Run Tests
       - name: Run Tests
         run: |
           docker-compose run web python manage.py test  
