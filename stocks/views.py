@@ -189,3 +189,11 @@ def report_view(request):
     except Exception as e:
         logger.error(f"Error generating report for symbol {symbol}: {e}")
         return JsonResponse({'status': 'error', 'message': 'Error generating report.'}, status=500)
+
+
+def custom_404_view(request, exception=None):
+    response_data = {
+        'error': 'Page Not Found',
+        'message': 'The page you are looking for does not exist.'
+    }
+    return JsonResponse(response_data, status=404)

@@ -7,3 +7,5 @@ urlpatterns = [
     path('predict/', predict_view, name="predict_prices"),  # URL to predict stock prices
     path('report/', report_view, name='stock_report'),   # URL to generate stock report
 ]
+
+handler404 = 'stocks.views.custom_404_view'
