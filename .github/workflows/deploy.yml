@@ -1,0 +1,82 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      # Step 3: Cache Docker layers
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/docker
+            ~/.docker/cache
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
+
+      # Step 4: Install dependencies
+      - name: Install requirements
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
+          pip3 install -r requirements.txt
+
+      # Step 5: Build the Docker image
+      - name: Build Docker Image
+        run: |
+          docker-compose build
+
+      # Step 6: Run tests
+      - name: Run Tests
+        run: |
+          docker-compose run web python manage.py test  # Adjust as necessary
+
+      # Step 7: Deploy to EC2
+      - name: Deploy to EC2
+        env:
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
+          DEBUG: ${{ secrets.DEBUG }}
+          EC2_KEY: ${{ secrets.EC2_KEY }}  
+          EC2_HOST: ${{ secrets.EC2_HOST }}  
+        run: |
+          # Decode the PEM key
+          echo $EC2_KEY | base64 --decode > ec2_key.pem
+          chmod 600 ec2_key.pem  # Secure the key
+
+          ssh -i ec2_key.pem -o StrictHostKeyChecking=no ubuntu@$EC2_HOST "
+            # Navigate to the app directory
+            cd ~/blockhouse_app
+            
+            # Pull the latest changes (if needed)
+            git pull origin main
+            
+            # Stop and remove existing containers
+            docker-compose down
+            
+            # Start the application with environment variables
+            docker-compose up -d
+            
+            # Verify application is running
+            sleep 10
+            curl -f http://localhost:8081/ || exit 1
+          "
