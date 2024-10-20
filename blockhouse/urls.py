@@ -21,5 +21,5 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', RedirectView.as_view(url='/stocks/', permanent=False)),  # Redirect root URL to /stocks/
-    path('stocks/', include('stocks.urls')),  # Ensure your stocks URLs are included
+    path('stocks/', include('stocks.urls')),  
 ]
