@@ -43,7 +43,7 @@ jobs:
       # Step 6: Run tests
       - name: Run Tests
         run: |
-          docker-compose run web python manage.py test  # Adjust as necessary
+          docker-compose run web python manage.py test  
 
       # Step 7: Deploy to EC2
       - name: Deploy to EC2
@@ -56,7 +56,7 @@ jobs:
           ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
           DEBUG: ${{ secrets.DEBUG }}
           EC2_KEY: ${{ secrets.EC2_KEY }}  
-          EC2_HOST: ${{ secrets.EC2_HOST }}  
+          EC2_HOST: ${{ secrets.EC2_HOST }} 
         run: |
           # Decode the PEM key
           echo $EC2_KEY | base64 --decode > ec2_key.pem
