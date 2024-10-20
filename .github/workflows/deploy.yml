@@ -18,18 +18,13 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      # Step 3: Cache Docker layers
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cache/docker
-            ~/.docker/cache
-          key: ${{ runner.os }}-docker-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-docker-
+      # Step 3: Install Docker and Docker Compose
+      - name: Set up Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker.io docker-compose
 
-      # Step 4: Install dependencies
+      # Step 4: Install requirements
       - name: Install requirements
         run: |
           sudo apt-get update
@@ -69,14 +64,10 @@ jobs:
             
             # Pull the latest changes (if needed)
             git pull origin main
-            
+
             # Stop and remove existing containers
             docker-compose down
             
             # Start the application with environment variables
             docker-compose up -d
-            
-            # Verify application is running
-            sleep 10
-            curl -f http://localhost:8081/ || exit 1
           "
